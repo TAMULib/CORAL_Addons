@@ -20,8 +20,9 @@
 class PigResource extends Resource {
 
     public static function getPigSearchDetails() {
-        // A successful mysql_connect must be run before mysql_real_escape_string will function.  Instantiating a resource model will set up the connection
-        $resource = new Resource();
+        // mysqli::real_escape_string() requires a connected database. DBService provides a connected database on when getInstance() is called.
+        // $this->db cannot be accessed because this is a static function.
+        $db = DBService::getInstance();
 
         $search = Resource::getSearch();
 
@@ -32,7 +33,7 @@ class PigResource extends Resource {
 
         //if name is passed in also search alias, organizations and organization aliases
         if ($search['name']) {
-            $nameQueryString = mysql_real_escape_string(strtoupper($search['name']));
+            $nameQueryString = $db->escapeString(strtoupper($search['name']));
             $nameQueryString = preg_replace("/ +/", "%", $nameQueryString);
             $nameQueryString = "'%" . $nameQueryString . "%'";
 
@@ -51,7 +52,7 @@ class PigResource extends Resource {
 
         //if descriptionText is passed
         if ($search['descriptionText']) {
-            $descriptionQueryString = mysql_real_escape_string(strtoupper($search['descriptionText']));
+            $descriptionQueryString = $db->escapeString(strtoupper($search['descriptionText']));
             $descriptionQueryString = preg_replace("/ +/", "%", $descriptionQueryString);
             $descriptionQueryString = "'%" . $descriptionQueryString . "%'";
             $whereAdd[] = "(UPPER(R.descriptionText) LIKE " . $descriptionQueryString . ")";
@@ -60,7 +61,7 @@ class PigResource extends Resource {
 
         //if providerText is passed
         if ($search['providerText']) {
-            $providerQueryString = mysql_real_escape_string(strtoupper($search['providerText']));
+            $providerQueryString = $db->escapeString(strtoupper($search['providerText']));
             $providerQueryString = preg_replace("/ +/", "%", $providerQueryString);
             $providerQueryString = "'%" . $providerQueryString . "%'";
             $whereAdd[] = "(UPPER(R.providerText) LIKE " . $providerQueryString . ")";
@@ -74,12 +75,12 @@ class PigResource extends Resource {
             $searchDisplay[] = "Resource ID: " . $search['resourceID'];
         }
         if ($search['resourceISBNOrISSN']) {
-            $resourceISBNOrISSN = mysql_real_escape_string(str_replace("-","",$search['resourceISBNOrISSN']));
+            $resourceISBNOrISSN = $db->escapeString(str_replace("-","",$search['resourceISBNOrISSN']));
             $whereAdd[] = "REPLACE(R.isbnOrISSN,'-','') = '" . $resourceISBNOrISSN . "'";
             $searchDisplay[] = "ISSN/ISBN: " . $search['resourceISBNOrISSN'];
         }
         if ($search['fund']) {
-            $fund = mysql_real_escape_string(str_replace("-","",$search['fund']));
+            $fund = $db->escapeString(str_replace("-","",$search['fund']));
             $whereAdd[] = "REPLACE(RPAY.fundName,'-','') = '" . $fund . "'";
             $searchDisplay[] = "Fund: " . $search['fund'];
         }
@@ -87,7 +88,7 @@ class PigResource extends Resource {
         if ($search['stepName']) {
             $status = new Status();
             $completedStatusID = $status->getIDFromName('complete');
-            $whereAdd[] = "(R.statusID != $completedStatusID AND RS.stepName = '" . mysql_real_escape_string($search['stepName']) . "' AND RS.stepStartDate IS NOT NULL AND RS.stepEndDate IS NULL)";
+            $whereAdd[] = "(R.statusID != $completedStatusID AND RS.stepName = '" . $db->escapeString($search['stepName']) . "' AND RS.stepStartDate IS NOT NULL AND RS.stepEndDate IS NULL)";
             $searchDisplay[] = "Routing Step: " . $search['stepName'];
         }
 
@@ -124,12 +125,12 @@ class PigResource extends Resource {
 
 
         if ($search['resourceNote']) {
-            $whereAdd[] = "UPPER(RN.noteText) LIKE UPPER('%" . mysql_real_escape_string($search['resourceNote']) . "%')";
+            $whereAdd[] = "UPPER(RN.noteText) LIKE UPPER('%" . $db->escapeString($search['resourceNote']) . "%')";
             $searchDisplay[] = "Note contains: " . $search['resourceNote'];
         }
 
         if ($search['createDateStart']) {
-            $whereAdd[] = "R.createDate >= STR_TO_DATE('" . mysql_real_escape_string($search['createDateStart']) . "','%m/%d/%Y')";
+            $whereAdd[] = "R.createDate >= STR_TO_DATE('" . $db->escapeString($search['createDateStart']) . "','%m/%d/%Y')";
             if (!$search['createDateEnd']) {
                 $searchDisplay[] = "Created on or after: " . $search['createDateStart'];
             } else {
@@ -138,14 +139,14 @@ class PigResource extends Resource {
         }
 
         if ($search['createDateEnd']) {
-            $whereAdd[] = "R.createDate <= STR_TO_DATE('" . mysql_real_escape_string($search['createDateEnd']) . "','%m/%d/%Y')";
+            $whereAdd[] = "R.createDate <= STR_TO_DATE('" . $db->escapeString($search['createDateEnd']) . "','%m/%d/%Y')";
             if (!$search['createDateStart']) {
                   $searchDisplay[] = "Created on or before: " . $search['createDateEnd'];
             }
         }
 
         if ($search['startWith']) {
-            $whereAdd[] = "TRIM(LEADING 'THE ' FROM UPPER(R.titleText)) LIKE UPPER('" . mysql_real_escape_string($search['startWith']) . "%')";
+            $whereAdd[] = "TRIM(LEADING 'THE ' FROM UPPER(R.titleText)) LIKE UPPER('" . $db->escapeString($search['startWith']) . "%')";
             $searchDisplay[] = "Starts with: " . $search['startWith'];
         }
 
