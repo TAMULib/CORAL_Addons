@@ -69,8 +69,8 @@ class PigResource extends Resource {
 
 
         //get where statements together (and escape single quotes)
-        if ($search['resourceID']) {
-            $whereAdd[] = "R.resourceID = '" . mysql_real_escape_string($search['resourceID']) . "'";
+        if (isset($search['resourceID']) && is_numeric($search['resourceID'])) {
+            $whereAdd[] = "R.resourceID = " . (int) $search['resourceID'];
             $searchDisplay[] = "Resource ID: " . $search['resourceID'];
         }
         if ($search['resourceISBNOrISSN']) {
@@ -92,14 +92,14 @@ class PigResource extends Resource {
         }
 
         // Return all results except the records with this statusID
-        if ($search['statusID']) {
-            $whereAdd[] = "R.statusID <> '" . mysql_real_escape_string($search['statusID']) . "'";
+        if (isset($search['statusID']) && is_numeric($search['statusID'])) {
+            $whereAdd[] = "R.statusID <> " . (int) $search['statusID'];
             $status = new Status(new NamedArguments(array('primaryKey' => $search['statusID'])));
             $searchDisplay[] = "Status: " . $status->shortName;
         }
 
-        if ($search['creatorLoginID']) {
-            $whereAdd[] = "R.createLoginID = '" . mysql_real_escape_string($search['creatorLoginID']) . "'";
+        if (isset($search['creatorLoginID']) && is_numeric($search['creatorLoginID'])) {
+            $whereAdd[] = "R.createLoginID = " . (int) $search['creatorLoginID'];
 
             $createUser = new User(new NamedArguments(array('primaryKey' => $search['creatorLoginID'])));
             if ($createUser->firstName){
@@ -110,14 +110,14 @@ class PigResource extends Resource {
             $searchDisplay[] = "Creator: " . $name;
         }
 
-        if ($search['resourceFormatID']) {
-            $whereAdd[] = "R.resourceFormatID = '" . mysql_real_escape_string($search['resourceFormatID']) . "'";
+        if (isset($search['resourceFormatID']) && is_numeric($search['resourceFormatID'])) {
+            $whereAdd[] = "R.resourceFormatID = " . (int) $search['resourceFormatID'];
             $resourceFormat = new ResourceFormat(new NamedArguments(array('primaryKey' => $search['resourceFormatID'])));
             $searchDisplay[] = "Resource Format: " . $resourceFormat->shortName;
         }
 
-        if ($search['acquisitionTypeID']) {
-            $whereAdd[] = "RA.acquisitionTypeID = '" . mysql_real_escape_string($search['acquisitionTypeID']) . "'";
+        if (isset($search['acquisitionTypeID']) && is_numeric($search['acquisitionTypeID'])) {
+            $whereAdd[] = "RA.acquisitionTypeID = " . (int) $search['acquisitionTypeID'];
             $acquisitionType = new AcquisitionType(new NamedArguments(array('primaryKey' => $search['acquisitionTypeID'])));
             $searchDisplay[] = "Acquisition Type: " . $acquisitionType->shortName;
         }
@@ -153,8 +153,8 @@ class PigResource extends Resource {
         if ($search['resourceTypeID'] == 'none'){
             $whereAdd[] = "((R.resourceTypeID IS NULL) OR (R.resourceTypeID = '0'))";
             $searchDisplay[] = "Resource Type: none";
-        }else if ($search['resourceTypeID']){
-            $whereAdd[] = "R.resourceTypeID = '" . mysql_real_escape_string($search['resourceTypeID']) . "'";
+        }else if (is_numeric($search['resourceTypeID'])){
+            $whereAdd[] = "R.resourceTypeID = " . (int) $search['resourceTypeID'];
             $resourceType = new ResourceType(new NamedArguments(array('primaryKey' => $search['resourceTypeID'])));
             $searchDisplay[] = "Resource Type: " . $resourceType->shortName;
         }
@@ -163,8 +163,8 @@ class PigResource extends Resource {
         if ($search['generalSubjectID'] == 'none'){
             $whereAdd[] = "((GDLINK.generalSubjectID IS NULL) OR (GDLINK.generalSubjectID = '0'))";
             $searchDisplay[] = "Resource Type: none";
-        }else if ($search['generalSubjectID']){
-            $whereAdd[] = "GDLINK.generalSubjectID = '" . mysql_real_escape_string($search['generalSubjectID']) . "'";
+        }else if (isset($search['generalSubjectID']) && is_numeric($search['generalSubjectID'])){
+            $whereAdd[] = "GDLINK.generalSubjectID = " . (int) $search['generalSubjectID'];
             $generalSubject = new GeneralSubject(new NamedArguments(array('primaryKey' => $search['generalSubjectID'])));
             $searchDisplay[] = "General Subject: " . $generalSubject->shortName;
         }
@@ -172,8 +172,8 @@ class PigResource extends Resource {
         if ($search['detailedSubjectID'] == 'none'){
             $whereAdd[] = "((GDLINK.detailedSubjectID IS NULL) OR (GDLINK.detailedSubjectID = '0') OR (GDLINK.detailedSubjectID = '-1'))";
             $searchDisplay[] = "Resource Type: none";
-        }else if ($search['detailedSubjectID']){
-            $whereAdd[] = "GDLINK.detailedSubjectID = '" . mysql_real_escape_string($search['detailedSubjectID']) . "'";
+        }else if (isset($search['detailedSubjectID']) && is_numeric($search['detailedSubjectID'])){
+            $whereAdd[] = "GDLINK.detailedSubjectID = " . (int) $search['detailedSubjectID'];
             $detailedSubject = new DetailedSubject(new NamedArguments(array('primaryKey' => $search['detailedSubjectID'])));
             $searchDisplay[] = "Detailed Subject: " . $detailedSubject->shortName;
         }
@@ -181,8 +181,8 @@ class PigResource extends Resource {
         if ($search['noteTypeID'] == 'none'){
             $whereAdd[] = "(RN.noteTypeID IS NULL) AND (RN.noteText IS NOT NULL)";
             $searchDisplay[] = "Note Type: none";
-        }else if ($search['noteTypeID']){
-            $whereAdd[] = "RN.noteTypeID = '" . mysql_real_escape_string($search['noteTypeID']) . "'";
+        }else if (isset($search['noteTypeID']) && is_numeric($search['noteTypeID'])){
+            $whereAdd[] = "RN.noteTypeID = " . (int) $search['noteTypeID'];
             $noteType = new NoteType(new NamedArguments(array('primaryKey' => $search['noteTypeID'])));
             $searchDisplay[] = "Note Type: " . $noteType->shortName;
         }
@@ -191,8 +191,8 @@ class PigResource extends Resource {
         if ($search['purchaseSiteID'] == 'none'){
             $whereAdd[] = "RPSL.purchaseSiteID IS NULL";
             $searchDisplay[] = "Purchase Site: none";
-        }else if ($search['purchaseSiteID']){
-            $whereAdd[] = "RPSL.purchaseSiteID = '" . mysql_real_escape_string($search['purchaseSiteID']) . "'";
+        }else if (isset($search['purchaseSiteID']) && is_numeric($search['purchaseSiteID'])){
+            $whereAdd[] = "RPSL.purchaseSiteID = " . (int) $search['purchaseSiteID'];
             $purchaseSite = new PurchaseSite(new NamedArguments(array('primaryKey' => $search['purchaseSiteID'])));
             $searchDisplay[] = "Purchase Site: " . $purchaseSite->shortName;
         }
@@ -201,8 +201,8 @@ class PigResource extends Resource {
         if ($search['authorizedSiteID'] == 'none'){
             $whereAdd[] = "RAUSL.authorizedSiteID IS NULL";
             $searchDisplay[] = "Authorized Site: none";
-        }else if ($search['authorizedSiteID']){
-            $whereAdd[] = "RAUSL.authorizedSiteID = '" . mysql_real_escape_string($search['authorizedSiteID']) . "'";
+        }else if (isset($search['authorizedSiteID']) && is_numeric($search['authorizedSiteID'])){
+            $whereAdd[] = "RAUSL.authorizedSiteID = " . (int) $search['authorizedSiteID'];
             $authorizedSite = new AuthorizedSite(new NamedArguments(array('primaryKey' => $search['authorizedSiteID'])));
             $searchDisplay[] = "Authorized Site: " . $authorizedSite->shortName;
         }
@@ -212,7 +212,7 @@ class PigResource extends Resource {
             $whereAdd[] = "RADSL.administeringSiteID IS NULL";
             $searchDisplay[] = "Administering Site: none";
         }else if ($search['administeringSiteID']){
-            $whereAdd[] = "RADSL.administeringSiteID = '" . mysql_real_escape_string($search['administeringSiteID']) . "'";
+            $whereAdd[] = "RADSL.administeringSiteID = " . (int) $search['administeringSiteID'];
             $administeringSite = new AdministeringSite(new NamedArguments(array('primaryKey' => $search['administeringSiteID'])));
             $searchDisplay[] = "Administering Site: " . $administeringSite->shortName;
         }
@@ -222,7 +222,7 @@ class PigResource extends Resource {
             $whereAdd[] = "R.authenticationTypeID IS NULL";
             $searchDisplay[] = "Authentication Type: none";
         }else if ($search['authenticationTypeID']){
-            $whereAdd[] = "R.authenticationTypeID = '" . mysql_real_escape_string($search['authenticationTypeID']) . "'";
+            $whereAdd[] = "R.authenticationTypeID = " . (int) $search['authenticationTypeID'];
             $authenticationType = new AuthenticationType(new NamedArguments(array('primaryKey' => $search['authenticationTypeID'])));
             $searchDisplay[] = "Authentication Type: " . $authenticationType->shortName;
         }
@@ -231,7 +231,7 @@ class PigResource extends Resource {
             $whereAdd[] = "(R.catalogingStatusID IS NULL)";
             $searchDisplay[] = "Cataloging Status: none";
         } else if ($search['catalogingStatusID']) {
-            $whereAdd[] = "R.catalogingStatusID = '" . mysql_real_escape_string($search['catalogingStatusID']) . "'";
+            $whereAdd[] = "R.catalogingStatusID = " . (int) $search['catalogingStatusID'];
             $catalogingStatus = new CatalogingStatus(new NamedArguments(array('primaryKey' => $search['catalogingStatusID'])));
             $searchDisplay[] = "Cataloging Status: " . $catalogingStatus->shortName;
         }
