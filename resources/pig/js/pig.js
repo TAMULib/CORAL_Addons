@@ -18,148 +18,148 @@
 
 $(document).ready(function(){
 
-  updateSearch($('#searchPage').val());      
-      
-	//perform search if enter is hit
-	$('#searchName').keyup(function(e) {
-	      if(e.keyCode == 13) {
-		updateSearch();
-	      }
-	});
+    updateSearch($('#searchPage').val());
 
-	//perform search if enter is hit
-	$('#searchDescriptionText').keyup(function(e) {
-	      if(e.keyCode == 13) {
-		updateSearch();
-	      }
-	});      
-	
-	//perform search if enter is hit
-	$('#searchProviderText').keyup(function(e) {
-	      if(e.keyCode == 13) {
-		updateSearch();
-	      }
-	});   	
+    //perform search if enter is hit
+    $('#searchName').keyup(function(e) {
+        if(e.keyCode == 13) {
+            updateSearch();
+        }
+    });
+
+    //perform search if enter is hit
+    $('#searchDescriptionText').keyup(function(e) {
+        if(e.keyCode == 13) {
+            updateSearch();
+        }
+    });
+
+    //perform search if enter is hit
+    $('#searchProviderText').keyup(function(e) {
+          if(e.keyCode == 13) {
+        updateSearch();
+          }
+    });
 
 
-	//bind change event to Records Per Page drop down
-	$("#numberRecordsPerPage").live('change', function () {
-	  setNumberOfRecords($(this).val())
-	});
-                   
+    //bind change event to Records Per Page drop down
+    $("#numberRecordsPerPage").live('change', function () {
+        setNumberOfRecords($(this).val())
+    });
 
-	//bind change event to each of the page start
-	$(".setPage").live('click', function () {
-		setPageStart($(this).attr('id'));
-	});
-	
-	$('#resourcePigSearchForm select').change(function() {
-	  updateSearch();
-	});
-	
-	$('#resourcePigSearchForm').submit(function() {
-	  updateSearch();
-	  return false;
-	});
-	
-	$(".searchButton").click(function() {
-	  $('#resourcePigSearchForm').submit();
-	  return false;
-	})
-	
-	$('#titleTextckbox').change(function() {
-	  $('#resourcePigSearchForm').submit();
-	  return false;
-	});
-	
-	$('#providerTextckbox').change(function() {
-	  $('#resourcePigSearchForm').submit();
-	  return false;
-	});
-	
-	$('#descriptionTextckbox').change(function() {
-	  $('#resourcePigSearchForm').submit();
-	  return false;
-	});
 
-	$('#generalSubjectckbox').change(function() {
-	  $('#resourcePigSearchForm').submit();
-	  return false;
-	});	
+    //bind change event to each of the page start
+    $(".setPage").live('click', function () {
+        setPageStart($(this).attr('id'));
+    });
 
-	$('#resourceTypeckbox').change(function() {
-	  $('#resourcePigSearchForm').submit();
-	  return false;
-	});	
-	
-	$('#resourcePigSearchForm checkbox').change(function() {
-	  alert('Handler for .change() called.');
-	});	
-	
+    $('#resourcePigSearchForm select').change(function() {
+        updateSearch();
+    });
+
+    $('#resourcePigSearchForm').submit(function() {
+        updateSearch();
+        return false;
+    });
+
+    $(".searchButton").click(function() {
+        $('#resourcePigSearchForm').submit();
+        return false;
+    })
+
+    $('#titleTextckbox').change(function() {
+        $('#resourcePigSearchForm').submit();
+        return false;
+    });
+
+    $('#providerTextckbox').change(function() {
+        $('#resourcePigSearchForm').submit();
+        return false;
+    });
+
+    $('#descriptionTextckbox').change(function() {
+        $('#resourcePigSearchForm').submit();
+        return false;
+    });
+
+    $('#generalSubjectckbox').change(function() {
+        $('#resourcePigSearchForm').submit();
+        return false;
+    });
+
+    $('#resourceTypeckbox').change(function() {
+        $('#resourcePigSearchForm').submit();
+        return false;
+    });
+
+    $('#resourcePigSearchForm checkbox').change(function() {
+        alert('Handler for .change() called.');
+    });
+
  });
 
- 
+
 function updateSearch(pageNumber) {
-  $("#div_feedback").html("<img src='images/circle.gif'>  <span style='font-size:90%'>Processing...</span>");
-  if (!pageNumber) {
-    pageNumber = 1;
-  }
-  $('#searchPage').val(pageNumber);
-  
-  var form = $('#resourcePigSearchForm');
-  $.post(
-    form.attr('action'),
-    form.serialize(),
-    function(html) { 
-     	$("#div_feedback").html("&nbsp;");
-     	$('#div_searchResults').html(html);  
-     }
-   );
-   
-   window.scrollTo(0, 0);
+    $("#div_feedback").html("<img src='images/circle.gif'>  <span style='font-size:90%'>Processing...</span>");
+    if (!pageNumber) {
+        pageNumber = 1;
+    }
+    $('#searchPage').val(pageNumber);
+
+    var form = $('#resourcePigSearchForm');
+    $.post(
+        form.attr('action'),
+        form.serialize(),
+        function(html) {
+            $("#div_feedback").html("&nbsp;");
+            $('#div_searchResults').html(html);
+        }
+    );
+
+    window.scrollTo(0, 0);
 }
 
- 
- 
+
+
 function setOrder(column, direction){
-  $("#searchOrderBy").val(column + " " + direction)
-  updateSearch();
+    $("#searchOrderBy").val(column + " " + direction)
+    updateSearch();
 }
- 
- 
+
+
 function setPageStart(pageStartNumber){
-  updateSearch(pageStartNumber);
+    updateSearch(pageStartNumber);
 }
 
 
 function setNumberOfRecords(recordsPerPageNumber){
-  $("#searchRecordsPerPage").val(recordsPerPageNumber);
-  updateSearch();
+    $("#searchRecordsPerPage").val(recordsPerPageNumber);
+    updateSearch();
 }
- 
- 
- 
-  $(".newSearch").click(function () {
-  	//reset fields
-  	$('#resourcePigSearchForm input[type=hidden]').not('#searchRecordsPerPage').val("");
+
+
+
+$(".newSearch").click(function () {
+    //reset fields
+    $('#resourcePigSearchForm input[type=hidden]').not('#searchRecordsPerPage').val("");
     $('#resourcePigSearchForm input[type=text]').val("");
-  	$('#resourcePigSearchForm select').val("");
+    $('#resourcePigSearchForm select').val("");
 
 
-  	//reset startwith background color
-  	$("span.searchLetterSelected").removeClass('searchLetterSelected').addClass('searchLetter');
-  	updateSearch();
-  });
-  
+    //reset startwith background color
+    $("span.searchLetterSelected").removeClass('searchLetterSelected').addClass('searchLetter');
+    updateSearch();
+});
 
-  $("#searchName").focus(function () {
-  	$("#div_searchName").css({'display':'block'}); 
-  });    
 
-  $("#searchDescriptionText").focus(function () {
-  	$("#div_searchDescriptionText").css({'display':'block'}); 
-  });    
-    
-  $("#searchProviderText").focus(function () {
-  	$("#div_searchProviderText").css({'display':'block'}); 
-  });   	
+$("#searchName").focus(function () {
+    $("#div_searchName").css({'display':'block'});
+});
+
+$("#searchDescriptionText").focus(function () {
+    $("#div_searchDescriptionText").css({'display':'block'});
+});
+
+$("#searchProviderText").focus(function () {
+    $("#div_searchProviderText").css({'display':'block'});
+});
