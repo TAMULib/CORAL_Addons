@@ -55,7 +55,8 @@ if (strlen($_GET['name']) > 0) {
     $search = Resource::getSearch();
 }
 
-$_SESSION['ref_script']=$currentPage;
+//set referring page
+CoralSession::set('ref_script', empty($currentPage) ? null : $currentPage);
 
 $html = new Html();
 
