@@ -313,7 +313,3 @@ switch ($_GET['action']) {
 
 
 }
-
-
-?>
-

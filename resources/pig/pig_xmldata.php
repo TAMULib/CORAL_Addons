@@ -172,6 +172,3 @@ switch ($_GET['action']) {
 $xml_output .= "</resources>";
 
 echo $xml_output;
-
-?>
-

@@ -378,5 +378,3 @@ class PigResource extends Resource {
         return $result['count'];
     }
 }
-
-?>
