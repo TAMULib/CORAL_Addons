@@ -57,6 +57,8 @@ if (strlen($_GET['name']) > 0) {
 
 $_SESSION['ref_script']=$currentPage;
 
+$html = new Html();
+
 ?>
 
 <div style='text-align:left;'>
@@ -66,7 +68,7 @@ $_SESSION['ref_script']=$currentPage;
   <form method="get" action="pig_ajax_htmldata.php?action=getPigSearchResources" id="resourcePigSearchForm">
     <?php
     foreach(array('statusID', 'orderBy','page','recordsPerPage','startWith') as $hidden) {
-        echo Html::hidden_search_field_tag($hidden, $search[$hidden]);
+        echo $html->hidden_search_field_tag($hidden, $search[$hidden]);
     }
     ?>
 
@@ -84,7 +86,7 @@ $_SESSION['ref_script']=$currentPage;
     <tr>
     <td class='searchRow'><label for='searchName'><b>Name (contains)</b></label>
     <br />
-    <?php echo Html::text_search_field_tag('name', $search['name']); ?>
+    <?php echo $html->text_search_field_tag('name', $search['name']); ?>
     <br />
     <div id='div_searchName' style='<?php if (!$search['name']) echo "display:none;"; ?>margin-left:123px;'><input type='button' name='btn_searchName' value='go!' class='searchButton' /></div>
     </td>
@@ -95,7 +97,7 @@ $_SESSION['ref_script']=$currentPage;
     <tr>
     <td class='searchRow'><label for='searchDescriptionText'><b>Description (contains)</b></label>
     <br />
-    <?php echo Html::text_search_field_tag('descriptionText', $search['descriptionText']); ?>
+    <?php echo $html->text_search_field_tag('descriptionText', $search['descriptionText']); ?>
     <br />
     <div id='div_searchDescriptionText' style='<?php if (!$search['descriptionText']) echo "display:none;"; ?>margin-left:123px;'><input type='button' name='btn_searchDescriptionText' value='go!' class='searchButton' /></div>
     </td>
@@ -105,7 +107,7 @@ $_SESSION['ref_script']=$currentPage;
     <tr>
     <td class='searchRow'><label for='searchProviderText'><b>Publisher (contains)</b></label>
     <br />
-    <?php echo Html::text_search_field_tag('providerText', $search['providerText']); ?><br />
+    <?php echo $html->text_search_field_tag('providerText', $search['providerText']); ?><br />
     <div id='div_searchProviderText' style='<?php if (!$search['providerText']) echo "display:none;"; ?>margin-left:123px;'><input type='button' name='btn_searchProviderText' value='go!' class='searchButton' /></div>
     </td>
     </tr>
