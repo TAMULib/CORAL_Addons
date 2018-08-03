@@ -117,7 +117,7 @@ class PigResource extends Resource {
         }
 
         if ($search['acquisitionTypeID']) {
-            $whereAdd[] = "R.acquisitionTypeID = '" . mysql_real_escape_string($search['acquisitionTypeID']) . "'";
+            $whereAdd[] = "RA.acquisitionTypeID = '" . mysql_real_escape_string($search['acquisitionTypeID']) . "'";
             $acquisitionType = new AcquisitionType(new NamedArguments(array('primaryKey' => $search['acquisitionTypeID'])));
             $searchDisplay[] = "Acquisition Type: " . $acquisitionType->shortName;
         }
@@ -292,7 +292,7 @@ class PigResource extends Resource {
     // These join statements will only be included in the query if the alias is referenced by the select and/or where.
     $conditional_joins = explode("\n", "LEFT JOIN ResourceFormat RF ON R.resourceFormatID = RF.resourceFormatID
                                     LEFT JOIN ResourceType RT ON R.resourceTypeID = RT.resourceTypeID
-                                    LEFT JOIN AcquisitionType AT ON R.acquisitionTypeID = AT.acquisitionTypeID
+                                    LEFT JOIN AcquisitionType AT ON RA.acquisitionTypeID = AT.acquisitionTypeID
                                     LEFT JOIN Status S ON R.statusID = S.statusID
                                     LEFT JOIN User CU ON R.createLoginID = CU.loginID
                                     LEFT JOIN ResourcePurchaseSiteLink RPSL ON R.resourceID = RPSL.resourceID
@@ -316,6 +316,7 @@ class PigResource extends Resource {
         $query = $select . "
                             FROM Resource R
                                 LEFT JOIN Alias A ON R.resourceID = A.resourceID
+                                LEFT JOIN ResourceAcquisition RA ON R.resourceID = RA.resourceID
                                 LEFT JOIN ResourceOrganizationLink ROL ON R.resourceID = ROL.resourceID
                                 " . $orgJoinAdd . "
                                 LEFT JOIN ResourceRelationship RRC ON RRC.relatedResourceID = R.resourceID
