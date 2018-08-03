@@ -17,7 +17,6 @@
 **************************************************************************************************************************
 */
 
-
 $util = new Utility();
 $config = new Configuration();
 
@@ -40,51 +39,138 @@ $coralURL = $util->getCORALURL();
 <title>Resources Module - <?php echo $pageTitle; ?></title>
 <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/thickbox.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/datePicker.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/jquery.autocomplete.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/datePicker.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/jquery.autocomplete.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/jquery.tooltip.css" type="text/css" media="screen" />
-<link rel="SHORTCUT ICON" href="images/butterflyfishfavicon.ico" />
-<script type="text/javascript" src="js/plugins/jquery.js"></script>
-<script type="text/javascript" src="js/plugins/ajaxupload.3.5.js"></script>
+<link rel="SHORTCUT ICON" href="images/favicon.ico" />
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="../js/plugins/jquery-1.4.4.js"></script>
+<script type="text/javascript" src="../js/plugins/ajaxupload.3.5.js"></script>
 <script type="text/javascript" src="js/plugins/thickbox.js"></script>
-<script type="text/javascript" src="js/plugins/date.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.datePicker.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="../js/plugins/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="../js/plugins/Gettext.js"></script>
+<?php
+    // Add translation for the JavaScript files
+    global $http_lang;
+    $str = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,5);
+    $default_l = $lang_name->getLanguage($str);
+    if($default_l==null || empty($default_l)){$default_l=$str;}
+    if(isset($_COOKIE["lang"])){
+        if($_COOKIE["lang"]==$http_lang && $_COOKIE["lang"] != "en_US"){
+            echo "<link rel='gettext' type='application/x-po' href='./locale/".$http_lang."/LC_MESSAGES/messages.po' />";
+        }
+    }else if($default_l==$http_lang && $default_l != "en_US"){
+            echo "<link rel='gettext' type='application/x-po' href='./locale/".$http_lang."/LC_MESSAGES/messages.po' />";
+    }
+?>
+<script type="text/javascript" src="../js/plugins/translate.js"></script>
+<script type="text/javascript" src="../js/plugins/datejs-patched-for-i18n.js"></script>
+<script type="text/javascript" src="../js/plugins/jquery.datePicker-patched-for-i18n.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
 </head>
 <body>
-<noscript><font face=arial>JavaScript must be enabled in order for you to use CORAL. However, it seems JavaScript is either disabled or not supported by your browser. To use CORAL, enable JavaScript by changing your browser options, then <a href="">try again</a>. </font></noscript>
+<noscript><font face='arial'><?php echo _("JavaScript must be enabled in order for you to use CORAL. However, it seems JavaScript is either disabled or not supported by your browser. To use CORAL, enable JavaScript by changing your browser options, then ");?><a href=""><?php echo _("try again");?></a>. </font></noscript>
 
 <div class="wrapper">
 <center>
-<table>
+<table id="main-table">
+
 <tr>
 <td style='vertical-align:top;'>
 <div style="text-align:left;">
 
 <center>
-<table class="titleTable" style="background-image:url('images/resourcestitle.jpg');background-repeat:no-repeat;width:900px;text-align:left;">
-<tr style='vertical-align:top;'>
-<td style='height:53px;'>
-&nbsp;
-</td>
-<td style='text-align:right;height:53px;'>
-<div style='margin-top:1px;'>
-<span class='smallText' style='color:#526972;'>
-</span>
-<br />
-<?php if ($config->settings->testMode == 'Y') { ?>
-  <br><span style="color:red;font-size:90%;">(Test)</span>
-<?php } ?>
-</div>
-</td>
-</tr>
+<table class="titleTable" style="width:1024px;text-align:left;">
 
-<tr style='vertical-align:top'>
-<td style='width:870px;height:19px;'>
-</td>
+    <tr style='vertical-align:top;'>
+        <td style='height:53px;' colspan='3'>
 
-<td style='width:130px;height:19px;' align='right'>&nbsp;</td>
-</tr>
+
+            <div id="main-title">
+                <img src="images/title-icon-resources.png" />
+                <span id="main-title-text"><?php echo _("Resources"); ?></span>
+                <span id="powered-by-text"><?php echo _("Powered by");?><img src="images/logo-coral.jpg" /></span>
+            </div>
+
+            <div id="menu-login" style='margin-top:1px;'>
+                <span class='smallText' style='color:#526972;'>
+                </span><br />
+
+                <span id="setLanguage">
+                    <select name="lang" id="lang" class="dropDownLang">
+                       <?php
+                        // Get all translations on the 'locale' folder
+                        $route='locale';
+                        $lang[]="en_US"; // add default language
+                        if (is_dir($route)) {
+                            if ($dh = opendir($route)) {
+                                while (($file = readdir($dh)) !== false) {
+                                    if (is_dir("$route/$file") && $file!="." && $file!=".."){
+                                        $lang[]=$file;
+                                    }
+                                }
+                                closedir($dh);
+                            }
+                        }else {
+                            echo "<br>"._("Invalid translation route!");
+                        }
+                        // Get language of navigator
+                        $defLang = $lang_name->getBrowserLanguage();
+
+                        // Show an ordered list
+                        sort($lang);
+                        for($i=0; $i<count($lang); $i++){
+                            if(isset($_COOKIE["lang"])){
+                                if($_COOKIE["lang"]==$lang[$i]){
+                                    echo "<option value='".$lang[$i]."' selected='selected'>".$lang_name->getNameLang($lang[$i])."</option>";
+                                }else{
+                                    echo "<option value='".$lang[$i]."'>".$lang_name->getNameLang($lang[$i])."</option>";
+                                }
+                            }else{
+                                if($defLang==substr($lang[$i],0,5)){
+                                    echo "<option value='".$lang[$i]."' selected='selected'>".$lang_name->getNameLang($lang[$i])."</option>";
+                                }else{
+                                    echo "<option value='".$lang[$i]."'>".$lang_name->getNameLang($lang[$i])."</option>";
+                                }
+                            }
+                        }
+                        ?>
+
+                    </select>
+                </span>
+            </div>
+
+        </td>
+    </tr>
+
+    <tr style='vertical-align:top'>
+        <td style='width:870px;height:19px;' id="main-menu-titles" colspan="2">
+
+            <a href='index.php' title="<?php echo _("Home") ?>">
+                <div class="main-menu-link <?php if ($currentPage == 'index.php') { echo "active"; } ?>">
+                    <img src="images/menu/icon-home.png" />
+                    <span><?php echo _("Home");?></span>
+                </div>
+            </a>
+
+        </td>
+
+        <td style='width:130px;height:19px;' align='right'>&nbsp;</td>
+    </tr>
 </table>
+    <script>
+        $("#lang").change(function() {
+            setLanguage($("#lang").val());
+            location.reload();
+        });
+
+        function setLanguage(lang) {
+            var wl = window.location, now = new Date(), time = now.getTime();
+            var cookievalid=2592000000; // 30 days (1000*60*60*24*30)
+            time += cookievalid;
+            now.setTime(time);
+            document.cookie ='lang='+lang+';path=/'+';domain='+wl.host+';expires='+now;
+        }
+    </script>
 <span id='span_message' class='darkRedText' style='text-align:left;'><?php if (isset($_POST['message'])) echo $_POST['message']; if (isset($errorMessage)) echo $errorMessage; ?></span>
