@@ -13,9 +13,9 @@
 **************************************************************************************************************************
 */
 
-This is a simple public interface for CORAL. The public interface which we’ve been calling the PIG (Public Interface Generator). 
-It includes a simple search box and a results display.  There are a couple of links in the top-right of the screen: 
-the PIG link will bring up a popup window with a URL for the search results for embedding, the PIG XML link does the same thing only 
+This is a simple public interface for CORAL. The public interface which we’ve been calling the PIG (Public Interface Generator).
+It includes a simple search box and a results display.  There are a couple of links in the top-right of the screen:
+the PIG link will bring up a popup window with a URL for the search results for embedding, the PIG XML link does the same thing only
 with a link for an XML feed.
 
 Installation:
@@ -26,9 +26,9 @@ No CORAL files will be replaced additional files will be added to the resources 
 
 You should then be able to access them like any other webpage.
 
-http://yourserver/yourcoralfolder/resources/pig.php 
-Is a search tool that lives outside of authentication and can be used for discovery.  It also provides a link to and XML output of search results along with a direct link which can be used to embed results in other applications. 
+http://yourserver/yourcoralfolder/resources/pig.php
+Is a search tool that lives outside of authentication and can be used for discovery.  It also provides a link to and XML output of search results along with a direct link which can be used to embed results in other applications.
 
 http://yourserver/yourcoralfolder/resources/pig_search.php
-Is a simple search box example that show how it can be embeded in other applications. 
+Is a simple search box example that show how it can be embeded in other applications.
 

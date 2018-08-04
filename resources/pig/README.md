@@ -2,7 +2,7 @@
 These Add-ons are meant to be installed by someone who is familiar with CORAL and the database backend.  An automated installer is NOT included with these Add-ons.  A detailed description for a manual install is included in the README file for each Add-on.
 
 
-The add-on includes a simple search box that can be embedded on a website as well as a more advanced search. The search results page includes a couple of links at the top right of the screen: HTML Feed and XML Feed. The HTML Feed link will provide you with an HTML version of the results that can then be embedded in a website. The XML Feed also provides a link to the results, only in XML. 
+The add-on includes a simple search box that can be embedded on a website as well as a more advanced search. The search results page includes a couple of links at the top right of the screen: HTML Feed and XML Feed. The HTML Feed link will provide you with an HTML version of the results that can then be embedded in a website. The XML Feed also provides a link to the results, only in XML.
 
 More information in the readme_pig.txt
 
